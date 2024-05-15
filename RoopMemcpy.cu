@@ -2,7 +2,7 @@
 #include <cuda.h>
 #include <chrono>
 
-#define ROOP 1000000
+#define ROOP 3000000
 #define SIZE 10000
 int main(int argc, char **argv)
 {
