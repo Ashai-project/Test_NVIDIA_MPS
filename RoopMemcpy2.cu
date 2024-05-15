@@ -56,4 +56,8 @@ int main(int argc, char **argv)
         cudaFreeHost(send_buff_h[j]);
         cudaFreeHost(recv_buff_h[j]);
     }
+    cudaFreeHost(send_buff_d);
+    cudaFreeHost(recv_buff_d);
+    cudaFreeHost(send_buff_h);
+    cudaFreeHost(recv_buff_h);
 }
