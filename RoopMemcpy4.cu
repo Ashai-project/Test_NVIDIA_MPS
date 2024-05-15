@@ -8,10 +8,12 @@
 int main(int argc, char **argv)
 {
     int **send_buff_h, **send_buff_d, **recv_buff_h, **recv_buff_d;
+    cudaStream_t *st;
     cudaMallocHost((void **)&recv_buff_h, sizeof(size_t) * PARA);
     cudaMallocHost((void **)&send_buff_d, sizeof(size_t) * PARA);
     cudaMallocHost((void **)&recv_buff_d, sizeof(size_t) * PARA);
     cudaMallocHost((void **)&send_buff_h, sizeof(size_t) * PARA);
+    cudaMallocHost((void **)&st, sizeof(cudaStream_t) * PARA);
     // メモリ確保
     for (int i = 0; i < PARA; i++)
     {
@@ -19,6 +21,7 @@ int main(int argc, char **argv)
         cudaMalloc((void **)&recv_buff_d[i], sizeof(int) * SIZE);
         cudaMallocHost((void **)&send_buff_h[i], sizeof(int) * SIZE);
         cudaMallocHost((void **)&recv_buff_h[i], sizeof(int) * SIZE);
+        cudaStreamCreate(&st[i]);
     }
 
     // init
@@ -37,11 +40,13 @@ int main(int argc, char **argv)
     {
         for (int j = 0; j < PARA; j++)
         {
-            cudaMemcpy(recv_buff_d[j], send_buff_d[j], sizeof(int) * SIZE, cudaMemcpyDeviceToDevice);
+            cudaMemcpyAsync(recv_buff_d[j], send_buff_d[j], sizeof(int) * SIZE, cudaMemcpyDeviceToDevice, st[j]);
         }
     }
+
     for (int j = 0; j < PARA; j++)
     {
+        cudaStreamSynchronize(st[j]);
         cudaMemcpy(recv_buff_h[j], recv_buff_d[j], sizeof(int) * SIZE, cudaMemcpyDeviceToHost);
     }
     auto end = std::chrono::system_clock::now();
