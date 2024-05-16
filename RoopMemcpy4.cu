@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cuda.h>
 #include <chrono>
+#include <thread>
 
 #define ROOP 3000000
 #define SIZE 10000
@@ -36,9 +37,10 @@ int main(int argc, char **argv)
 
     // メモリコピー
     auto start = std::chrono::system_clock::now();
-#pragma omp parallel for num_threads(PARA)
+#pragma omp parallel for num_threads(13)
     for (int j = 0; j < PARA; j++)
     {
+        // std::cout << "Current thread ID: " << std::this_thread::get_id() << std::endl;
         for (int i = 0; i < ROOP; i++)
         {
             cudaMemcpyAsync(recv_buff_d[j], send_buff_d[j], sizeof(int) * SIZE, cudaMemcpyDeviceToDevice, st[j]);
