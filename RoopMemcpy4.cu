@@ -36,9 +36,10 @@ int main(int argc, char **argv)
 
     // メモリコピー
     auto start = std::chrono::system_clock::now();
-    for (int i = 0; i < ROOP; i++)
+#pragma omp parallel for num_threads(PARA)
+    for (int j = 0; j < PARA; j++)
     {
-        for (int j = 0; j < PARA; j++)
+        for (int i = 0; i < ROOP; i++)
         {
             cudaMemcpyAsync(recv_buff_d[j], send_buff_d[j], sizeof(int) * SIZE, cudaMemcpyDeviceToDevice, st[j]);
         }
