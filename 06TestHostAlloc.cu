@@ -1,3 +1,17 @@
+/**
+ * @file 06TestHostAlloc.cu
+ * @brief ホストメモリについての知識
+ * デバイスからホストメモリの参照は
+ * 1.MallocHostのメモリをMemcpyでデバイスに渡す
+ * 2.HostAllocで参照可能なホストメモリを確保する
+ * が考えられる。
+ * これについて、デバイスからの参照が多い場合には2のほうが早い
+ * @version 0.1
+ * @date 2024-05-16
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #include <iostream>
 #include <chrono>
 #define N 1000
