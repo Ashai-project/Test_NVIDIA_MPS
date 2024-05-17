@@ -36,8 +36,14 @@ int main(int argc, char **argv)
     }
 
     // メモリコピー
+    unsigned int max_thread = std::thread::hardware_concurrency();
+    std::cout << "thread max capacity:" << max_thread << std::endl;
+    if (max_thread > PARA)
+        max_thread = PARA;
+    std::cout << "thread capacity:" << max_thread << std::endl;
+
     auto start = std::chrono::system_clock::now();
-#pragma omp parallel for num_threads(13)
+#pragma omp parallel for num_threads(max_thread)
     for (int j = 0; j < PARA; j++)
     {
         // std::cout << "Current thread ID: " << std::this_thread::get_id() << std::endl;
